@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_browser/custom_image.dart';
+import 'package:flutter_browser/navibar/customBottomNavigationBar.dart';
 import 'package:flutter_browser/tab_viewer.dart';
 import 'package:flutter_browser/app_bar/browser_app_bar.dart';
 import 'package:flutter_browser/models/webview_model.dart';
@@ -100,65 +101,45 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
 
   Widget _buildWebViewTabs() {
     return WillPopScope(
-        onWillPop: () async {
-          var browserModel = Provider.of<BrowserModel>(context, listen: false);
-          var webViewModel = browserModel.getCurrentTab()?.webViewModel;
-          var webViewController = webViewModel?.webViewController;
+      onWillPop: () async {
+        var browserModel = Provider.of<BrowserModel>(context, listen: false);
+        var webViewModel = browserModel.getCurrentTab()?.webViewModel;
+        var webViewController = webViewModel?.webViewController;
 
-          if (webViewController != null) {
-            if (await webViewController.canGoBack()) {
-              webViewController.goBack();
-              return false;
-            }
-          }
-
-          if (webViewModel != null && webViewModel.tabIndex != null) {
-            setState(() {
-              browserModel.closeTab(webViewModel.tabIndex!);
-            });
-            if (mounted) {
-              FocusScope.of(context).unfocus();
-            }
+        if (webViewController != null) {
+          if (await webViewController.canGoBack()) {
+            webViewController.goBack();
             return false;
           }
+        }
 
-          return browserModel.webViewTabs.isEmpty;
+        if (webViewModel != null && webViewModel.tabIndex != null) {
+          setState(() {
+            browserModel.closeTab(webViewModel.tabIndex!);
+          });
+          if (mounted) {
+            FocusScope.of(context).unfocus();
+          }
+          return false;
+        }
+
+        return browserModel.webViewTabs.isEmpty;
+      },
+      child: Listener(
+        onPointerUp: (_) {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus &&
+              currentFocus.focusedChild != null) {
+            currentFocus.focusedChild!.unfocus();
+          }
         },
-        child: Listener(
-          onPointerUp: (_) {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus &&
-                currentFocus.focusedChild != null) {
-              currentFocus.focusedChild!.unfocus();
-            }
-          },
-          child: Scaffold(
-            appBar: const BrowserAppBar(),
-            body: _buildWebViewTabsContent(),
-            bottomNavigationBar: BottomNavigationBar(
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home, color: Colors.black),
-                  label: 'text',
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.chat, color: Colors.black), label: 'Chat'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.search, color: Colors.black),
-                    label: 'Search'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.settings, color: Colors.black),
-                    label: 'Settings'),
-              ],
-              // currentIndex: _currentIndex,
-              // onTap: (int index) {
-              //   setState(() {
-              //     _currentIndex = index;
-              //   });
-              // },
-            ),
-          ),
-        ));
+        child: Scaffold(
+          appBar: const BrowserAppBar(),
+          body: _buildWebViewTabsContent(),
+          bottomNavigationBar: const CustomBottomNavigationBar(),
+        ),
+      ),
+    );
   }
 
   Widget _buildWebViewTabsContent() {
