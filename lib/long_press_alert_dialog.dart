@@ -215,7 +215,8 @@ class _LongPressAlertDialogState extends State<LongPressAlertDialog> {
       onTap: () {
         Clipboard.setData(ClipboardData(
             text: widget.requestFocusNodeHrefResult?.url.toString() ??
-                widget.hitTestResult.extra));
+                widget.hitTestResult.extra ??
+                "nodata"));
         Navigator.pop(context);
       },
     );
