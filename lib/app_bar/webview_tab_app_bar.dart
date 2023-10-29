@@ -185,7 +185,7 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
               border: outlineBorder,
               focusedBorder: outlineBorder,
               enabledBorder: outlineBorder,
-              hintText: "Search for or type a web address",
+              hintText: "Search for or type abbbb web address",
               hintStyle: const TextStyle(color: Colors.black54, fontSize: 16.0),
             ),
             style: const TextStyle(color: Colors.black, fontSize: 16.0),
@@ -1008,8 +1008,8 @@ class _WebViewTabAppBarState extends State<WebViewTabAppBar>
       var currentSettings = await webViewController.getSettings();
       if (currentSettings != null) {
         currentSettings.preferredContentMode = webViewModel?.isDesktopMode ?? false
-            ? UserPreferredContentMode.DESKTOP
-            : UserPreferredContentMode.RECOMMENDED;
+                ? UserPreferredContentMode.DESKTOP
+                : UserPreferredContentMode.RECOMMENDED;
         await webViewController.setSettings(settings: currentSettings);
       }
       await webViewController.reload();

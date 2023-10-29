@@ -133,7 +133,31 @@ class _BrowserState extends State<Browser> with SingleTickerProviderStateMixin {
             }
           },
           child: Scaffold(
-              appBar: const BrowserAppBar(), body: _buildWebViewTabsContent()),
+            appBar: const BrowserAppBar(),
+            body: _buildWebViewTabsContent(),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home, color: Colors.black),
+                  label: 'text',
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.chat, color: Colors.black), label: 'Chat'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.search, color: Colors.black),
+                    label: 'Search'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.settings, color: Colors.black),
+                    label: 'Settings'),
+              ],
+              // currentIndex: _currentIndex,
+              // onTap: (int index) {
+              //   setState(() {
+              //     _currentIndex = index;
+              //   });
+              // },
+            ),
+          ),
         ));
   }
 
